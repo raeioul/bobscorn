@@ -50,6 +50,10 @@ app.post('/buy-corn', (req: Request, res: Response) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Bob's Corn API listening at http://localhost:${port}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`Bob's Corn API listening at http://localhost:${port}`);
+    });
+}
+
+export { app };

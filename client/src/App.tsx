@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { CooldownWatch } from './CooldownWatch'
+import { CooldownWatch } from './components/CooldownWatch'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import cornBg from './assets/product-corn.jpg'
