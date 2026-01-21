@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# Bob's Corn Technical Documentation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the **Bob's Corn** project! This document provides a comprehensive overview of the system architecture, the technology stack, and the core logic that powers the landing page and the corn-buying service.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Project Overview
 
-## React Compiler
+Bob's Corn is a high-performance web application designed for a premium user experience. It consists of a **Node.js/Express API** backend and a **Vite/React** frontend, both built with TypeScript for maximum safety and developer productivity.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend (API)
+- **Node.js**: The runtime environment.
+- **TypeScript**: Ensuring type safety throughout the codebase.
+- **Express.js**: Lightweight framework for handling HTTP requests.
+- **Vitest**: Modern testing framework for unit and integration tests.
+- **Supertest**: Library for testing HTTP endpoints.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Frontend (Client)
+- **React 19**: Modern component-based UI library.
+- **Vite**: Ultra-fast build tool and dev server.
+- **Tailwind CSS v4**: The latest utility-first CSS framework for rapid UI development.
+- **Lucide Icons / SVG**: For crisp, scalable visual elements.
+- **Vitest & React Testing Library**: For component and unit testing.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🧠 Backend Architecture & Logic
+
+The backend is responsible for enforcing business rules and tracking client progress.
+
+### 1. Rate Limiting Strategy
+The core business logic is the **Rate Limiter**, located in `api/src/rateLimiter.ts`.
+- **Client Identification**: Uses a custom `X-Client-ID` header (or IP fallback) to uniquely identify users.
+- **Cooldown enforcement**: Each client is restricted to **one purchase per 60 seconds**.
+- **In-Memory Storage**: The server uses `Map` objects to track `lastPurchaseTime` and `cornCounts`. 
+    > [!NOTE]
+    > To keep the challenge simple, data is currently stored in memory and will reset if the server restarts.
+
+### 2. API Endpoints
+- `POST /buy-corn`: 
+    - Checks the rate limit for the provided `clientId`.
+    - Returns `200 🌽` on success.
+    - Returns `429 Too Many Requests` with a `Retry-After` header if the cooldown is active.
+- `GET /corn-count`: (Planned) To fetch the client's current count independently.
+
+---
+
+## 🎨 Frontend Architecture & Design
+
+The frontend focuses on **visual excellence** and **responsive interactions**.
+
+### 1. Aesthetic Design (Glassmorphism)
+We used a premium "Glassmorphism" aesthetic:
+- **Header**: Sticky, semi-transparent background with `backdrop-blur-lg`.
+- **Hero Section**: A full-screen corn background (`product-corn.jpg`) with a dark overlay to make content pop.
+- **Card**: Semi-transparent black backgrounds with high blur to maintain readability without hiding the beautiful imagery.
+
+### 2. Core Components
+- **`Header`**: Responsive navigation with smooth-scrolling links and social media integration.
+- **`Footer`**: Simple, elegant branding and contact section.
+- **`CooldownWatch`**: A custom-designed circular progress gauge that visualizes the remaining wait time using SVG dash-offsets and CSS transitions.
+
+### 3. State Management
+- **React Hooks**: Uses `useState` and `useEffect` for local state (corn count, messages, cooldown timer).
+- **LocalStorage**: Persists the `clientId` so you are recognized by the server as the same user across sessions.
+
+---
+
+## 🧪 Testing Strategy
+
+We follow a strict testing protocol to ensure reliability:
+
+- **Backend Tests**: 
+    - `RateLimiter.test.ts`: Verifies successful purchases, cooldown enforcement, and client isolation.
+    - `api.test.ts`: Tests the actual HTTP responses and headers.
+- **Frontend Tests**: 
+    - `CooldownWatch.test.tsx`: Validates rendering of the timer logic.
+    - `Header.test.tsx` / `Footer.test.tsx`: Verifies branding and link availability.
+
+---
+
+## 📂 Directory Structure
+
+```bash
+bob-api/
+├── api/                # Backend code
+│   ├── src/            # Logic & Tests
+│   └── package.json    # Backend dependencies
+├── client/             # Frontend code
+│   ├── src/            # Components, Styling & Tests
+│   │   ├── components/ # Reusable UI components
+│   │   ├── test/       # Organized test suite
+│   │   └── App.tsx     # Main application entry
+│   └── vite.config.ts  # Vite & Tailwind configuration
+└── .agent/             # Internal agent workflows
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
