@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface CooldownWatchProps {
     remainingTime: number;
@@ -7,6 +7,7 @@ interface CooldownWatchProps {
 }
 
 export const CooldownWatch: React.FC<CooldownWatchProps> = ({ remainingTime, totalTime = 60 }) => {
+    const { t } = useTranslation();
     const radius = 40;
     const stroke = 4;
     const normalizedRadius = radius - stroke * 2;
@@ -46,10 +47,10 @@ export const CooldownWatch: React.FC<CooldownWatchProps> = ({ remainingTime, tot
                 </svg>
                 {/* Time Text in Center */}
                 <div className="absolute text-xl font-bold text-gray-700">
-                    {remainingTime}s
+                    {t('cooldown.seconds', { count: remainingTime })}
                 </div>
             </div>
-            <span className="text-sm text-gray-400 mt-2 font-medium">Wait Time</span>
+            <span className="text-sm text-gray-400 mt-2 font-medium">{t('cooldown.wait_time')}</span>
         </div>
     );
 };

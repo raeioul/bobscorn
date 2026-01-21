@@ -1,0 +1,25 @@
+{
+    "header": {
+        "order_corn": "Pedir Maíz",
+        "order_corn_now": "Pide Maíz Ahora"
+    },
+    "hero": {
+        "title": "¡Maíz Dulce de Bob™ entregado cerca de ti!",
+        "description": "En la Granja de Bob, entregamos el maíz más fresco y de mejor calidad en un sitio cercano a ti para recogida local. Cosechado diariamente, nuestro maíz fresco de granja ofrece un sabor y nutrición superiores con una entrega rápida y confiable. Disfruta de la excelencia en cada mazorca.",
+        "cta": "Pide tu maíz ahora",
+        "total_bought": "Total de Maíz Comprado: {{count}}"
+    },
+    "footer": {
+        "rights": "Todos los derechos reservados.",
+        "contact": "Contacto"
+    },
+    "cooldown": {
+        "wait_time": "Tiempo de Espera",
+        "seconds": "{{count}}s"
+    },
+    "messages": {
+        "too_many_requests": "¡Demasiadas peticiones! Espera {{seconds}} segundos más.",
+        "success": "¡200 🌽 Éxito!",
+        "error": "Error al comprar maíz. Inténtalo de nuevo."
+    }
+}

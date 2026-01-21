@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CooldownWatch } from './components/CooldownWatch'
 import { Header } from './components/Header'
 import { Footer } from './components/Footer'
 import cornBg from './assets/product-corn.jpg'
 
 function App() {
+  const { t } = useTranslation()
   const [cornCount, setCornCount] = useState(0)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -50,20 +52,18 @@ function App() {
       }
 
       if (response.ok) {
-        setMessage('Successfully bought a corn! 🌽')
+        setMessage(t('messages.success'))
         setCooldown(60)
       } else if (response.status === 429) {
-        setError('Too many requests! You can only buy 1 corn per minute.')
-        if (data.retryAfter) {
-          const secondsLeft = Math.ceil(data.retryAfter / 1000)
-          setCooldown(secondsLeft)
-        }
+        const secondsLeft = data.retryAfter ? Math.ceil(data.retryAfter / 1000) : 60
+        setError(t('messages.too_many_requests', { seconds: secondsLeft }))
+        setCooldown(secondsLeft)
       } else {
-        setError('Something went wrong.')
+        setError(t('messages.error'))
       }
     } catch (err) {
       console.error(err)
-      setError('Failed to connect to the server.')
+      setError(t('messages.error'))
     } finally {
       setLoading(false)
     }
@@ -82,13 +82,13 @@ function App() {
       <main className="relative z-10 flex-grow flex items-center justify-center p-4 pt-24 md:pt-32 pb-12">
         <div id="order-section" className="bg-black/75 backdrop-blur-md rounded-3xl p-8 md:p-12 max-w-2xl w-full border border-white/10 shadow-2xl">
           <h1 className="text-4xl md:text-6xl font-black text-white italic mb-6 leading-tight">
-            Bob's <span className="text-yellow-400">Sweet™</span> Sweet Corn delivered near you!
+            {t('hero.title').split('Bob\'s').map((part, i) => i === 0 ? part : (
+              <span key={i}>Bob's <span className="text-yellow-400">Sweet™</span>{part}</span>
+            ))}
           </h1>
 
           <p className="text-gray-300 text-lg md:text-xl mb-10 leading-relaxed font-medium">
-            At Bob's Farm, we deliver the freshest, highest quality corn to a site near you for local pick-up.
-            Harvested daily, our farm-fresh corn offers superior flavor and nutrition with reliable, prompt delivery.
-            Enjoy excellence in every ear with Bob's Sweet™ Sweet Corn.
+            {t('hero.description')}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -115,13 +115,13 @@ function App() {
               >
                 <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
               </svg>
-              {loading ? 'Processing...' : 'Order your corn now'}
+              {loading ? t('messages.processing', { defaultValue: 'Processing...' }) : t('hero.cta')}
             </button>
 
             {cornCount > 0 && (
               <div className="flex flex-col items-center sm:items-start">
                 <span className="text-yellow-400 text-4xl font-black">{cornCount}</span>
-                <span className="text-white/60 text-xs uppercase tracking-widest font-bold">Corns Owned</span>
+                <span className="text-white/60 text-xs uppercase tracking-widest font-bold">{t('hero.corns_owned', { defaultValue: 'Corns Owned' })}</span>
               </div>
             )}
           </div>

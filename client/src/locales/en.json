@@ -1,0 +1,25 @@
+{
+    "header": {
+        "order_corn": "Order Corn",
+        "order_corn_now": "Order Corn Now"
+    },
+    "hero": {
+        "title": "Bob's Sweet™ Sweet Corn delivered near you!",
+        "description": "At Bob's Farm, we deliver the freshest, highest quality corn to a site near you for local pick-up. Harvested daily, our farm-fresh corn offers superior flavor and nutrition with reliable, prompt delivery. Enjoy excellence in every ear with Bob's Sweet™ Sweet Corn.",
+        "cta": "Order your corn now",
+        "total_bought": "Total Corn Bought: {{count}}"
+    },
+    "footer": {
+        "rights": "All rights reserved.",
+        "contact": "Contact"
+    },
+    "cooldown": {
+        "wait_time": "Wait Time",
+        "seconds": "{{count}}s"
+    },
+    "messages": {
+        "too_many_requests": "Too many requests! Wait {{seconds}} more seconds.",
+        "success": "200 🌽 Success!",
+        "error": "Failed to buy corn. Please try again."
+    }
+}
